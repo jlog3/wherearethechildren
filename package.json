@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "framer-motion": "^12.34.0",
+    "lucide-react": "^0.564.0",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  }
+}
