@@ -41,7 +41,7 @@ Sincerely,`;
     const formData = new FormData(form);
 
     try {
-      const res = await fetch('https://formspree.io/f/YOUR_CODE_HERE', {
+      const res = await fetch('https://formspree.io/f/xlgwbzwe', {
         method: 'POST',
         body: formData,
         headers: { Accept: 'application/json' }

@@ -85,6 +85,7 @@ npm run dev
 Open http://localhost:3000
 
 ### Project Structure
+```text
 app/
 ├── page.tsx                 # Home
 ├── crisis/page.tsx
@@ -98,6 +99,7 @@ components/
 ├── OIGFunnel.tsx
 public/
 └── og-image.jpg
+```
 
 
 #### Data Sources
