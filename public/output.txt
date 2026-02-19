@@ -1,0 +1,2034 @@
+===== app/action/page.tsx =====
+// app/action/page.tsx
+'use client';
+
+import { motion } from 'framer-motion';
+import { Search, Send, Share2, Mail, Twitter, Facebook } from 'lucide-react';
+import { useState } from 'react';
+
+export default function ActionPage() {
+  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [zip, setZip] = useState('');
+
+  const petitionText = `Dear Members of Congress,
+
+I am writing to demand the immediate passage of the **Newborn and Foster Child Accountability Act**.
+
+Every year, the state removes approximately 22,000 newborns and infants from their parents and places them into foster care. 
+
+The 2023 HHS OIG audit revealed that **69% of missing episodes from foster care were never properly reported** to the national system. Thousands of children are lost in the black box.
+
+We demand:
+
+1. Annual **public, anonymized dashboards** tracking every CPS-involved child from removal to outcome (reunification, adoption, guardianship, or aging out).
+2. Secure linkage between birth records and foster outcomes (fully de-identified).
+3. Automatic, real-time public reporting of every missing-from-care episode to NCMEC.
+4. Funding tied to compliance.
+
+Privacy should protect children — not shield a failing system.
+
+The public has a right to know where the children are.
+
+Thank you for your leadership.
+
+Sincerely,`;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormStatus('loading');
+
+    // Replace with your Formspree endpoint
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch('https://formspree.io/f/xlgwbzwe', {
+        method: 'POST',
+        body: formData,
+        headers: { Accept: 'application/json' }
+      });
+
+      if (res.ok) {
+        setFormStatus('success');
+        form.reset();
+      } else {
+        alert('Something went wrong. Please try again.');
+        setFormStatus('idle');
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
+      setFormStatus('idle');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/95 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+              <div className="text-[10px] text-white/60 -mt-1">.net</div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <a href="/" className="hover:text-red-400 transition-colors">Home</a>
+            <a href="/crisis" className="hover:text-red-400 transition-colors">The Crisis</a>
+            <a href="/pipeline" className="hover:text-red-400 transition-colors">Newborn Pipeline</a>
+            <a href="/blackbox" className="hover:text-red-400 transition-colors">The Black Box</a>
+            <a href="/risks" className="hover:text-red-400 transition-colors">Risks in Care</a>
+            <a href="/action" className="text-red-400 font-semibold">Take Action</a>
+          </div>
+
+          <a href="/" className="text-sm text-white/60 hover:text-white">← Back to Home</a>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-16 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="text-red-400 text-sm font-mono tracking-[4px] uppercase mb-6">THE MOMENT IS NOW</div>
+          <h1 className="text-7xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
+            Take<br />
+            <span className="text-red-400">Action</span>
+          </h1>
+          <p className="text-2xl text-white/80 max-w-2xl mx-auto">
+            The data is undeniable.<br />
+            The black box must be opened.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Petition Form */}
+      <section className="py-20 bg-white/5 border-y border-white/10">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="bg-[#0A1428] border border-red-500/30 rounded-3xl p-12 md:p-16">
+            <h2 className="text-4xl font-bold mb-4">Sign the Petition</h2>
+            <p className="text-white/70 mb-10">Demand the **Newborn and Foster Child Accountability Act**</p>
+
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-mono text-white/50 mb-2">FIRST NAME</label>
+                  <input name="name" required className="w-full bg-white/10 border border-white/20 rounded-2xl px-6 py-4 focus:border-red-400 outline-none" placeholder="Alex" />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-white/50 mb-2">EMAIL</label>
+                  <input name="email" type="email" required className="w-full bg-white/10 border border-white/20 rounded-2xl px-6 py-4 focus:border-red-400 outline-none" placeholder="you@email.com" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-white/50 mb-2">ZIP CODE (for your representatives)</label>
+                <input 
+                  name="zip" 
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                  className="w-full bg-white/10 border border-white/20 rounded-2xl px-6 py-4 focus:border-red-400 outline-none" 
+                  placeholder="90210" 
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-white/50 mb-2">YOUR MESSAGE TO CONGRESS (pre-filled)</label>
+                <textarea 
+                  name="message"
+                  defaultValue={petitionText}
+                  rows={14}
+                  className="w-full bg-white/10 border border-white/20 rounded-3xl px-6 py-6 focus:border-red-400 outline-none font-light text-sm leading-relaxed"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={formStatus === 'loading'}
+                className="w-full bg-red-600 hover:bg-red-500 py-6 rounded-2xl font-bold text-xl transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70"
+              >
+                {formStatus === 'loading' ? 'SENDING...' : 'SIGN & SEND TO CONGRESS'}
+                <Send className="w-6 h-6" />
+              </button>
+            </form>
+
+            {formStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-8 text-center text-green-400 font-medium"
+              >
+                ✅ Thank you. Your voice has been sent.
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* One-Click Email Tools */}
+      <section className="py-24">
+        <div className="max-w-4xl mx-auto px-6">
+          <h3 className="text-center text-3xl font-bold mb-12">Or Email Your Representatives Directly</h3>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Senators */}
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10 hover:border-red-500/30 transition-all">
+              <div className="flex items-center gap-4 mb-6">
+                <Mail className="w-10 h-10 text-red-400" />
+                <div>
+                  <div className="font-semibold text-xl">Email Both Senators</div>
+                  <div className="text-white/50 text-sm">Takes 30 seconds</div>
+                </div>
+              </div>
+              <a
+                href={`mailto:senator@senate.gov?subject=Pass the Newborn and Foster Child Accountability Act&body=${encodeURIComponent(petitionText)}`}
+                className="block w-full bg-white/10 hover:bg-white/20 border border-white/20 py-4 rounded-2xl text-center font-medium transition-colors"
+              >
+                OPEN EMAIL TO SENATORS →
+              </a>
+            </div>
+
+            {/* Representative */}
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10 hover:border-red-500/30 transition-all">
+              <div className="flex items-center gap-4 mb-6">
+                <Mail className="w-10 h-10 text-red-400" />
+                <div>
+                  <div className="font-semibold text-xl">Email Your Representative</div>
+                  <div className="text-white/50 text-sm">Takes 30 seconds</div>
+                </div>
+              </div>
+              <a
+                href={`mailto:representative@house.gov?subject=Pass the Newborn and Foster Child Accountability Act&body=${encodeURIComponent(petitionText)}`}
+                className="block w-full bg-white/10 hover:bg-white/20 border border-white/20 py-4 rounded-2xl text-center font-medium transition-colors"
+              >
+                OPEN EMAIL TO REPRESENTATIVE →
+              </a>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-white/40 mt-10 font-mono">
+            Tip: Replace the generic emails above with your actual reps (use congress.gov or resist.bot)
+          </p>
+        </div>
+      </section>
+
+      {/* Share Section */}
+      <section className="py-20 bg-gradient-to-b from-transparent to-black/60">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h3 className="text-3xl font-bold mb-10">Share This Site</h3>
+          
+          <div className="flex flex-wrap justify-center gap-6">
+            <a
+              href="https://twitter.com/intent/tweet?text=Where%20are%20the%20children%3F%20Official%20data%20shows%20the%20foster%20system%20loses%20track%20of%20thousands.%20Read%20the%20receipts%3A%20https%3A%2F%2Fwherearethechildren.net"
+              target="_blank"
+              className="flex items-center gap-3 bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 border border-[#1DA1F2]/30 px-10 py-4 rounded-2xl transition-all"
+            >
+              <Twitter className="w-6 h-6" />
+              Share on X
+            </a>
+
+            <a
+              href="https://www.facebook.com/sharer/sharer.php?u=https://wherearethechildren.net"
+              target="_blank"
+              className="flex items-center gap-3 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 px-10 py-4 rounded-2xl transition-all"
+            >
+              <Facebook className="w-6 h-6" />
+              Share on Facebook
+            </a>
+
+            <button
+              onClick={() => navigator.clipboard.writeText('https://wherearethechildren.net')}
+              className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/20 px-10 py-4 rounded-2xl transition-all"
+            >
+              <Share2 className="w-6 h-6" />
+              Copy Link
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Final Message */}
+      <section className="py-32 text-center border-t border-white/10">
+        <p className="text-4xl font-light text-white/80 max-w-3xl mx-auto leading-tight">
+          The children cannot speak for themselves.<br />
+          <span className="text-red-400">We must.</span>
+        </p>
+      </section>
+    </div>
+  );
+}
+
+
+===== app/blackbox/page.tsx =====
+// app/blackbox/page.tsx
+'use client';
+
+import { motion } from 'framer-motion';
+import { Lock, FileLock, Shield, Users, Search, ArrowRight, Baby } from 'lucide-react';
+
+const lockedItems = [
+  {
+    icon: Baby,
+    title: "Recent Birth Certificates",
+    description: "No public national database of newborns exists. States seal recent birth records for 75–125 years.",
+    lockedFor: "75–125 years",
+    impact: "We cannot even start tracking a child who was removed at birth."
+  },
+  {
+    icon: FileLock,
+    title: "Individual CPS Outcomes",
+    description: "AFCARS only publishes aggregate numbers. You cannot follow what happened to any specific child after removal.",
+    lockedFor: "Always",
+    impact: "We know how many enter. We are not allowed to know how many exit safely."
+  },
+  {
+    icon: Users,
+    title: "Foster Parent Violation Records",
+    description: "No national public database of licensed foster homes, complaints, or revocations exists.",
+    lockedFor: "Always",
+    impact: "We hand newborns to strangers with almost zero public oversight."
+  },
+  {
+    icon: Shield,
+    title: "Real-Time Missing Episodes",
+    description: "Many states fail to report missing foster children to NCMEC within 24 hours — as required by law.",
+    lockedFor: "Ongoing",
+    impact: "Even when children disappear from care, the public is kept in the dark."
+  }
+];
+
+export default function BlackBoxPage() {
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/95 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+              <div className="text-[10px] text-white/60 -mt-1">.net</div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <a href="/" className="hover:text-red-400 transition-colors">Home</a>
+            <a href="/crisis" className="hover:text-red-400 transition-colors">The Crisis</a>
+            <a href="/pipeline" className="hover:text-red-400 transition-colors">Newborn Pipeline</a>
+            <a href="/blackbox" className="text-red-400 font-semibold">The Black Box</a>
+            <a href="/risks" className="hover:text-red-400 transition-colors">Risks in Care</a>
+            <a href="/action" className="hover:text-red-400 transition-colors">Take Action</a>
+          </div>
+
+          <a 
+            href="/action"
+            className="bg-red-600 hover:bg-red-500 px-8 py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95"
+          >
+            DEMAND TRANSPARENCY
+          </a>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-16 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            {/* Left: Visual */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="relative flex justify-center"
+            >
+              <div className="relative">
+                {/* Big Locked Cabinet */}
+                <div className="w-80 h-96 bg-gradient-to-br from-zinc-800 to-black rounded-3xl border-8 border-red-500/50 shadow-2xl relative overflow-hidden">
+                  {/* Cabinet lines */}
+                  <div className="absolute inset-4 border border-white/10 rounded-2xl" />
+                  <div className="absolute inset-8 border border-white/10 rounded-xl" />
+                  
+                  {/* Lock */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 bg-red-600 rounded-2xl flex items-center justify-center shadow-xl">
+                    <Lock className="w-16 h-16 text-white" strokeWidth={2} />
+                  </div>
+
+                  {/* Red "CLASSIFIED" stamp */}
+                  <div className="absolute -top-6 -right-12 rotate-45 bg-red-600 text-white text-xs font-bold tracking-widest px-20 py-1 text-center shadow">
+                    BLACK BOX
+                  </div>
+                </div>
+
+                {/* Floating labels */}
+                <div className="absolute -top-6 -left-8 bg-red-500/90 text-white text-xs font-mono px-4 py-1.5 rounded-full shadow">
+                  LOCKED
+                </div>
+                <div className="absolute -bottom-4 right-12 bg-black/90 text-white/70 text-xs px-5 py-2 rounded-2xl border border-white/10">
+                  No public access
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right: Text */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <div className="uppercase text-red-400 text-sm font-mono tracking-[4px] mb-4">THE REAL SCANDAL</div>
+              <h1 className="text-7xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
+                The<br />
+                <span className="text-red-400">Black Box</span>
+              </h1>
+              <p className="text-3xl text-white/80 leading-tight">
+                We are allowed to know when a child is taken.<br />
+                <span className="text-white">We are forbidden from knowing what happens next.</span>
+              </p>
+
+              <div className="mt-12 text-white/60 text-lg">
+                This is not a glitch.<br />
+                This is deliberate design.
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Locked Items Grid */}
+      <section className="py-24 bg-[#0A1428]/80 border-t border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold tracking-tighter mb-4">What the Public Is Legally Forbidden From Seeing</h2>
+            <p className="text-xl text-white/60">These are not technical limitations.<br />These are policy choices.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {lockedItems.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group bg-white/5 border border-white/10 hover:border-red-500/50 rounded-3xl p-10 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex items-start gap-6">
+                    <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/20 transition-colors">
+                      <Icon className="w-9 h-9 text-red-400" strokeWidth={1.8} />
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <div className="text-red-400">
+                          <Lock className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-2xl font-semibold">{item.title}</h3>
+                      </div>
+
+                      <p className="text-white/70 mt-4 leading-relaxed text-[17px]">
+                        {item.description}
+                      </p>
+
+                      <div className="mt-8 flex items-center justify-between">
+                        <div>
+                          <div className="text-xs text-white/40 font-mono uppercase tracking-widest">Locked for</div>
+                          <div className="text-red-400 font-semibold text-lg">{item.lockedFor}</div>
+                        </div>
+
+                        <div className="text-right">
+                          <div className="text-xs text-white/40 font-mono uppercase tracking-widest">Impact on newborns</div>
+                          <div className="text-white/80 text-sm max-w-[180px]">{item.impact}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Advocacy Message */}
+      <section className="py-28 bg-gradient-to-br from-red-950/30 to-transparent">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-4xl mb-8">“Privacy should protect children —</div>
+            <div className="text-4xl text-red-400 font-light">not shield a failing system.”</div>
+
+            <div className="mt-16 text-white/60 max-w-lg mx-auto text-lg">
+              Every time someone says “we can’t release this data because of privacy,” 
+              remember: the same system uses that privacy to hide the children it loses.
+            </div>
+
+            <div className="mt-12 text-xs text-white/30 font-mono tracking-widest">— This site exists to change that.</div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-32 border-t border-white/10">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <h2 className="text-6xl font-bold leading-none tracking-tighter mb-10">
+            The black box only stays closed<br />
+            <span className="text-red-400">if we let it.</span>
+          </h2>
+
+          <a
+            href="/action"
+            className="inline-block bg-red-600 hover:bg-red-500 text-2xl font-bold px-20 py-8 rounded-3xl transition-all active:scale-95 shadow-2xl shadow-red-600/50"
+          >
+            DEMAND ANONYMIZED PUBLIC TRACKING →
+          </a>
+
+          <div className="mt-12 text-white/50 text-sm">
+            Next: <a href="/risks" className="underline hover:text-red-400">What happens inside the foster homes →</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+
+===== app/crisis/page.tsx =====
+// app/crisis/page.tsx
+'use client';
+
+import { motion } from 'framer-motion';
+import { AlertTriangle, Users, Search, ArrowRight } from 'lucide-react';
+import OIGFunnel from '@/components/OIGFunnel';
+
+export default function CrisisPage() {
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/95 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+              <div className="text-[10px] text-white/60 -mt-1">.net</div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <a href="/" className="hover:text-red-400 transition-colors">Home</a>
+            <a href="/crisis" className="text-red-400 font-semibold">The Crisis</a>
+            <a href="/pipeline" className="hover:text-red-400 transition-colors">Newborn Pipeline</a>
+            <a href="/blackbox" className="hover:text-red-400 transition-colors">The Black Box</a>
+            <a href="/risks" className="hover:text-red-400 transition-colors">Risks in Care</a>
+            <a href="/action" className="hover:text-red-400 transition-colors">Take Action</a>
+          </div>
+
+          <a 
+            href="/action"
+            className="bg-red-600 hover:bg-red-500 px-8 py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95"
+          >
+            DEMAND TRANSPARENCY
+          </a>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-3 bg-red-500/10 text-red-400 px-6 py-3 rounded-3xl text-sm font-mono tracking-[4px] uppercase mb-8 border border-red-500/30">
+              <AlertTriangle className="w-5 h-5" />
+              THIS IS NOT SPECULATION
+            </div>
+
+            <h1 className="text-7xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
+              The<br />
+              <span className="text-red-400">Crisis</span>
+            </h1>
+
+            <p className="text-2xl md:text-3xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+              Thousands of children go missing from state care every year.<br />
+              <span className="text-red-400 font-semibold">The government itself admits it loses track of them.</span>
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* OIG Funnel - The Bomb */}
+      <section className="py-20 bg-gradient-to-b from-[#0A1428] via-red-950/20 to-[#0A1428]">
+        <div className="max-w-6xl mx-auto px-6">
+          <OIGFunnel />
+        </div>
+      </section>
+
+      {/* 2024-2025 Missing Numbers */}
+      <section className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-12">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center hover:border-red-500/30 transition-all group"
+            >
+              <div className="text-red-400 mb-6">
+                <Users className="w-16 h-16 mx-auto" />
+              </div>
+              <div className="text-6xl font-mono font-bold tabular-nums mb-4">
+                23,160
+              </div>
+              <div className="text-xl text-white/80 mb-2">reported missing from care</div>
+              <div className="text-sm text-white/40">2024 • National Center for Missing & Exploited Children</div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center hover:border-red-500/30 transition-all group"
+            >
+              <div className="text-red-400 mb-6">
+                <AlertTriangle className="w-16 h-16 mx-auto" />
+              </div>
+              <div className="text-6xl font-mono font-bold tabular-nums mb-4 text-red-400">
+                19–25%
+              </div>
+              <div className="text-xl text-white/80 mb-2">likely victims of sex trafficking</div>
+              <div className="text-sm text-white/40">NCMEC estimate for missing-from-care cases</div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center hover:border-red-500/30 transition-all group"
+            >
+              <div className="text-red-400 mb-6">
+                <Search className="w-16 h-16 mx-auto" />
+              </div>
+              <div className="text-6xl font-mono font-bold tabular-nums mb-4">
+                ???
+              </div>
+              <div className="text-xl text-white/80 mb-2">actual number missing in 2025–2026</div>
+              <div className="text-sm text-white/40">Underreporting continues. No new national audit exists.</div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trafficking Risk Callout */}
+      <section className="py-20 bg-red-950/30 border-y border-red-500/20">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-5xl font-bold mb-8">These Are Not Just Runaways</h2>
+          <p className="text-2xl text-white/90 leading-relaxed">
+            One in seven children reported missing from care is assessed by NCMEC<br />
+            as <span className="text-red-400 font-bold">likely being trafficked</span>.
+          </p>
+          <p className="text-lg text-white/60 mt-8">
+            And remember — thanks to the broken reporting exposed by the OIG audit —<br />
+            <span className="text-red-400">these are only the ones we know about.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-32">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <h2 className="text-6xl font-bold mb-12">
+            The government admits it loses children.<br />
+            <span className="text-white/60">We are no longer willing to look away.</span>
+          </h2>
+
+          <a
+            href="/action"
+            className="inline-block bg-red-600 hover:bg-red-500 text-2xl font-bold px-20 py-8 rounded-3xl transition-all active:scale-95 shadow-2xl shadow-red-600/50"
+          >
+            DEMAND PUBLIC TRACKING NOW →
+          </a>
+
+          <div className="mt-12 text-white/50 text-sm">
+            Next: <a href="/pipeline" className="underline hover:text-red-400">The Newborn Pipeline →</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+
+===== app/globals.css =====
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Dark scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0A1428;
+}
+::-webkit-scrollbar-thumb {
+  background: #1F2A44;
+  border-radius: 20px;
+}
+
+
+===== app/layout.tsx =====
+// app/layout.tsx
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+export const metadata: Metadata = {
+  title: 'Where Are The Children? | Official Data on Missing Foster Kids',
+  description: 'The government removes thousands of newborns every year. Then it loses track of many of them. Here is the official data they publish — and what they deliberately hide.',
+  keywords: 'foster care, missing children, CPS, child protective services, OIG audit, newborn removal, foster accountability',
+  openGraph: {
+    title: 'Where Are The Children?',
+    description: 'Official U.S. government data on the foster care black box',
+    url: 'https://wherearethechildren.net',
+    siteName: 'Where Are The Children?',
+    images: [
+      {
+        url: 'https://wherearethechildren.net/og-image.jpg', // We'll create this later
+        width: 1200,
+        height: 630,
+        alt: 'Where Are The Children?',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Where Are The Children?',
+    description: 'The foster system is losing children. Here is the proof.',
+  },
+  robots: 'index, follow',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} bg-[#0A1428] text-white antialiased`}>
+        {children}
+      </body>
+    </html>
+  );
+}
+
+
+===== app/page.tsx =====
+// app/page.tsx
+'use client';
+
+import { useEffect, useState, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Baby, Users, AlertTriangle, Search, ArrowRight, Lock } from 'lucide-react';
+
+export default function Home() {
+  // Counter hook
+  const Counter = ({ end, duration = 2000, suffix = '' }: { end: number; duration?: number; suffix?: string }) => {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true });
+
+    useEffect(() => {
+      if (!inView) return;
+      
+      let startTime: number;
+      let animationFrame: number;
+      
+      const animate = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const value = Math.floor(progress * end);
+        setCount(value);
+        
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(animate);
+        } else {
+          setCount(end);
+        }
+      };
+      
+      animationFrame = requestAnimationFrame(animate);
+      
+      return () => cancelAnimationFrame(animationFrame);
+    }, [inView, end, duration]);
+
+    return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white overflow-x-hidden">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/90 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+              <div className="text-[10px] text-white/60 -mt-1">.net</div>
+            </div>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <a href="/crisis" className="hover:text-red-400 transition-colors">The Crisis</a>
+            <a href="/pipeline" className="hover:text-red-400 transition-colors">Newborn Pipeline</a>
+            <a href="/blackbox" className="hover:text-red-400 transition-colors">The Black Box</a>
+            <a href="/risks" className="hover:text-red-400 transition-colors">Risks in Care</a>
+            <a href="/action" className="hover:text-red-400 transition-colors">Take Action</a>
+          </div>
+
+          <a 
+            href="/action"
+            className="bg-red-600 hover:bg-red-500 px-8 py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95 flex items-center gap-2"
+          >
+            DEMAND TRANSPARENCY
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="relative min-h-[100dvh] flex items-center pt-20">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center brightness-50"
+          style={{
+            backgroundImage: "url('https://picsum.photos/id/1015/2000/1200')" // Replace with real emotional photo later
+          }}
+        />
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1428]/40 via-[#0A1428]/80 to-[#0A1428]" />
+
+        <div className="relative max-w-5xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl px-6 py-2 rounded-3xl mb-8 border border-white/10">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+              <span className="uppercase text-xs tracking-[3px] font-mono text-red-400">Official Government Data</span>
+            </div>
+
+            <h1 className="text-7xl md:text-8xl font-bold leading-[1.05] tracking-tighter mb-6">
+              Where Are<br />
+              <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">The Children?</span>
+            </h1>
+
+            <p className="max-w-2xl mx-auto text-xl md:text-2xl text-white/80 font-light leading-relaxed mb-12">
+              Every year, the state removes <span className="font-semibold text-white">thousands of newborns</span> from their parents.<br />
+              Then the system loses track of many of them.<br />
+              <span className="text-red-400 font-medium">This is the data they publish — and what they hide.</span>
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/pipeline"
+                className="group bg-white text-[#0A1428] font-semibold text-lg px-12 py-5 rounded-3xl hover:bg-white/90 transition-all flex items-center justify-center gap-3 active:scale-95"
+              >
+                SEE THE PIPELINE
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </a>
+              
+              <a
+                href="/action"
+                className="group border border-white/30 hover:border-white/50 font-semibold text-lg px-10 py-5 rounded-3xl backdrop-blur-xl transition-all flex items-center gap-3 active:scale-95"
+              >
+                DEMAND PUBLIC TRACKING
+              </a>
+            </div>
+
+            <div className="mt-16 text-xs uppercase tracking-widest text-white/40 flex items-center justify-center gap-8">
+              <div>DATA FROM HHS • AFCARS • NCMEC • OIG</div>
+              <div>UPDATED FEBRUARY 2026</div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll prompt */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
+          <div className="text-[10px] tracking-widest">SCROLL FOR THE TRUTH</div>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+          >
+            ↓
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Quick Stats */}
+      <section className="py-24 bg-[#0A1428] border-t border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            
+            {/* Stat 1 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-red-500/30 transition-colors group"
+            >
+              <div className="text-red-400 mb-3">
+                <Users className="w-10 h-10" />
+              </div>
+              <div className="text-5xl font-mono font-bold tabular-nums mb-2">
+                <Counter end={328947} />
+              </div>
+              <div className="text-white/70 text-lg">children in foster care</div>
+              <div className="text-xs text-white/40 mt-4">FY2024 • AFCARS</div>
+            </motion.div>
+
+            {/* Stat 2 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-red-500/30 transition-colors group"
+            >
+              <div className="text-red-400 mb-3">
+                <Baby className="w-10 h-10" />
+              </div>
+              <div className="text-5xl font-mono font-bold tabular-nums mb-2">
+                <Counter end={22097} />
+              </div>
+              <div className="text-white/70 text-lg">infants under 1 year old</div>
+              <div className="text-xs text-white/40 mt-4">7% of all children in care • FY2024</div>
+            </motion.div>
+
+            {/* Stat 3 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-red-500/30 transition-colors group"
+            >
+              <div className="text-red-400 mb-3">
+                <AlertTriangle className="w-10 h-10" />
+              </div>
+              <div className="text-5xl font-mono font-bold tabular-nums mb-2">
+                <Counter end={23160} />
+              </div>
+              <div className="text-white/70 text-lg">reported missing from care</div>
+              <div className="text-xs text-white/40 mt-4">2024 • NCMEC • 92% "recovered"</div>
+            </motion.div>
+
+            {/* Stat 4 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-red-500/30 transition-colors group relative overflow-hidden"
+            >
+              <div className="text-red-400 mb-3">
+                <Lock className="w-10 h-10" />
+              </div>
+              <div className="text-5xl font-mono font-bold tabular-nums mb-2 text-red-400">
+                69%
+              </div>
+              <div className="text-white/70 text-lg">of missing episodes never properly reported</div>
+              <div className="text-xs text-white/40 mt-4">74,353 episodes • 2023 HHS OIG Audit</div>
+              
+              <div className="absolute -bottom-6 -right-6 text-[120px] font-black text-red-500/10">69</div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pipeline Teaser */}
+      <section className="py-24 bg-gradient-to-b from-[#0A1428] to-[#0A1428]/90">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <div className="uppercase text-red-400 text-xs tracking-[4px] font-mono mb-4">START HERE</div>
+            <h2 className="text-5xl font-bold tracking-tighter mb-4">The Newborn Pipeline</h2>
+            <p className="text-xl text-white/70 max-w-xl mx-auto">We can count them when they enter the system.<br />We cannot publicly verify what happens after.</p>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-12 md:p-16">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+              {[
+                { num: "3.6M", label: "U.S. births per year" },
+                { num: "≈200K", label: "CPS removals" },
+                { num: "22K", label: "Infants placed in foster care" },
+                { num: "???", label: "What happens next?", accent: true }
+              ].map((step, i) => (
+                <div key={i} className="flex-1 text-center group">
+                  <div className={`text-6xl font-mono font-bold ${step.accent ? 'text-red-400' : 'text-white'} group-hover:scale-110 transition-transform`}>
+                    {step.num}
+                  </div>
+                  <div className={`h-px w-12 mx-auto my-6 bg-gradient-to-r from-transparent via-white/30 to-transparent ${step.accent && 'via-red-400'}`} />
+                  <div className="text-white/60 text-sm uppercase tracking-wider">{step.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-16 text-center">
+              <a
+                href="/pipeline"
+                className="inline-flex items-center gap-3 bg-red-600 hover:bg-red-500 text-lg font-semibold px-10 py-4 rounded-2xl transition-all group"
+              >
+                FOLLOW THE FULL PIPELINE
+                <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-32 bg-[#0A1428] border-t border-white/10">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <div className="text-red-400 text-sm tracking-[3px] uppercase font-mono mb-6">THE SYSTEM IS OPAQUE BY DESIGN</div>
+          
+          <h2 className="text-6xl font-bold leading-tight tracking-tighter mb-8">
+            We are done being told<br />
+            <span className="text-white/60">to just trust the process.</span>
+          </h2>
+
+          <a
+            href="/action"
+            className="inline-block bg-white text-[#0A1428] text-2xl font-bold px-16 py-8 rounded-3xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-red-500/20"
+          >
+            DEMAND ANONYMIZED PUBLIC TRACKING NOW →
+          </a>
+
+          <p className="text-white/50 mt-12 text-sm max-w-md mx-auto">
+            This site uses only official federal data.<br />
+            No conspiracy. Just receipts.
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-black/60 py-12 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 text-center text-white/40 text-xs">
+          <p>wherearethechildren.net • Built to force accountability • All data is public government records</p>
+          <p className="mt-4">Not affiliated with any government agency • For transparency and reform</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+
+===== app/pipeline/page.tsx =====
+// app/pipeline/page.tsx
+'use client';
+
+import { motion, useInView } from 'framer-motion';
+import { Baby, FileText, Scale, Home, ArrowDown, Search, AlertCircle } from 'lucide-react';
+import { useRef } from 'react';
+
+const pipelineSteps = [
+  {
+    id: 1,
+    icon: Baby,
+    number: "3.6M",
+    label: "U.S. births per year",
+    description: "Approximately 3.6 million children are born in the United States each year (CDC, 2025).",
+    source: "CDC National Vital Statistics System",
+    color: "from-blue-400 to-cyan-400"
+  },
+  {
+    id: 2,
+    icon: FileText,
+    number: "≈4M",
+    label: "CPS referrals / investigations",
+    description: "Child Protective Services receives over 4 million reports of suspected child maltreatment annually.",
+    source: "HHS Child Maltreatment Report 2024",
+    color: "from-amber-400 to-orange-400"
+  },
+  {
+    id: 3,
+    icon: Scale,
+    number: "≈200K",
+    label: "Children removed from home",
+    description: "Roughly 200,000 children are removed from their parents each year and enter the foster system.",
+    source: "AFCARS Report #30 (2025)",
+    color: "from-red-400 to-rose-500"
+  },
+  {
+    id: 4,
+    icon: Home,
+    number: "22K",
+    label: "Newborns & infants placed in foster care",
+    description: "About 22,000 children under the age of 1 are in foster care at any given time — most removed shortly after birth.",
+    source: "AFCARS FY2024 • 7% of all children in care",
+    color: "from-purple-400 to-violet-500"
+  },
+  {
+    id: 5,
+    icon: AlertCircle,
+    number: "???",
+    label: "What happens next?",
+    description: "The system places them in foster homes, relative care, or group facilities. Then the public record ends.",
+    source: "The Black Box",
+    color: "from-red-600 to-rose-600",
+    isBlackBox: true
+  }
+];
+
+export default function PipelinePage() {
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/95 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+              <div className="text-[10px] text-white/60 -mt-1">.net</div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <a href="/" className="hover:text-red-400 transition-colors">Home</a>
+            <a href="/crisis" className="hover:text-red-400 transition-colors">The Crisis</a>
+            <a href="/pipeline" className="text-red-400 font-semibold">Newborn Pipeline</a>
+            <a href="/blackbox" className="hover:text-red-400 transition-colors">The Black Box</a>
+            <a href="/risks" className="hover:text-red-400 transition-colors">Risks in Care</a>
+            <a href="/action" className="hover:text-red-400 transition-colors">Take Action</a>
+          </div>
+
+          <a 
+            href="/action"
+            className="bg-red-600 hover:bg-red-500 px-8 py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95"
+          >
+            DEMAND TRANSPARENCY
+          </a>
+        </div>
+      </nav>
+
+      <div className="pt-24 pb-32">
+        {/* Page Header */}
+        <div className="max-w-4xl mx-auto px-6 text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="uppercase text-red-400 text-sm tracking-[4px] font-mono mb-4">YOUR CHILD’S JOURNEY</div>
+            <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6">
+              The Newborn<br />
+              <span className="text-red-400">Pipeline</span>
+            </h1>
+            <p className="text-2xl text-white/70 max-w-2xl mx-auto">
+              We can count them when they enter.<br />
+              We are not allowed to know what happens after.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* The Pipeline Visualization */}
+        <div className="max-w-3xl mx-auto px-6 relative">
+          <div className="absolute left-1/2 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+
+          {pipelineSteps.map((step, index) => {
+            const Icon = step.icon;
+            const isLast = index === pipelineSteps.length - 1;
+
+            return (
+              <motion.div
+                key={step.id}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -60 : 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+                className={`relative flex gap-12 items-start mb-20 last:mb-0 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+              >
+                {/* Connecting dot */}
+                <div className="absolute left-1/2 top-8 w-5 h-5 -translate-x-1/2 rounded-full border-4 border-[#0A1428] bg-red-500 z-10" />
+
+                {/* Icon Circle */}
+                <div className={`w-24 h-24 rounded-3xl flex-shrink-0 flex items-center justify-center bg-gradient-to-br ${step.color} shadow-xl shadow-black/50 relative z-20`}>
+                  <Icon className="w-12 h-12 text-white" strokeWidth={1.75} />
+                  {step.isBlackBox && (
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-black rounded-full flex items-center justify-center border-2 border-red-500">
+                      <span className="text-xs font-bold text-red-400">?</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Content Card */}
+                <div className={`flex-1 bg-white/5 border border-white/10 rounded-3xl p-10 hover:border-red-500/30 transition-all group ${step.isBlackBox ? 'border-red-500/50' : ''}`}>
+                  <div className="text-6xl font-mono font-bold tabular-nums mb-3 text-white group-hover:text-red-400 transition-colors">
+                    {step.number}
+                  </div>
+                  
+                  <div className="text-2xl font-semibold mb-4 leading-tight">
+                    {step.label}
+                  </div>
+
+                  <p className="text-white/70 leading-relaxed mb-6 text-[17px]">
+                    {step.description}
+                  </p>
+
+                  <div className="text-xs uppercase tracking-widest text-white/40 font-mono">
+                    {step.source}
+                  </div>
+
+                  {step.isBlackBox && (
+                    <div className="mt-8 pt-8 border-t border-red-500/30">
+                      <div className="flex items-center gap-3 text-red-400">
+                        <AlertCircle className="w-5 h-5" />
+                        <span className="font-semibold uppercase tracking-widest text-sm">The Black Box Begins</span>
+                      </div>
+                      <p className="text-sm text-red-400/80 mt-3">
+                        No public database exists to follow these children. Their outcomes are hidden from view.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Bottom Message */}
+        <div className="max-w-2xl mx-auto text-center mt-24 px-6">
+          <div className="inline-flex items-center gap-4 bg-red-500/10 border border-red-500/30 rounded-3xl px-8 py-4">
+            <div className="text-4xl">📉</div>
+            <div>
+              <div className="text-red-400 font-semibold">We track entry.</div>
+              <div className="text-white/60 text-sm">We are forbidden from tracking outcomes.</div>
+            </div>
+          </div>
+
+          <div className="mt-16">
+            <a
+              href="/blackbox"
+              className="inline-flex items-center gap-4 text-xl font-medium group"
+            >
+              Continue to The Black Box →
+              <ArrowDown className="group-hover:translate-y-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Final CTA Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black to-transparent h-28 flex items-end justify-center pb-8 z-50 pointer-events-none">
+        <a
+          href="/action"
+          className="pointer-events-auto bg-red-600 hover:bg-red-500 px-14 py-5 rounded-2xl font-bold text-lg tracking-wider transition-all active:scale-95 shadow-2xl shadow-red-600/50"
+        >
+          DEMAND WE BE ALLOWED TO SEE WHAT HAPPENS NEXT
+        </a>
+      </div>
+    </div>
+  );
+}
+
+
+===== app/risks/page.tsx =====
+// app/risks/page.tsx
+'use client';
+
+import { motion } from 'framer-motion';
+import { Shield, AlertTriangle, Users, Home, Search, ArrowRight } from 'lucide-react';
+
+const riskStats = [
+  {
+    icon: AlertTriangle,
+    number: "0.9%",
+    label: "Substantiated maltreatment while in foster care",
+    detail: "Per year (national average)",
+    source: "NCANDS / Child Maltreatment Reports",
+    color: "text-amber-400"
+  },
+  {
+    icon: Users,
+    number: "40–60%",
+    label: "Cases where foster parents were the perpetrators",
+    detail: "In detailed state-level audits of substantiated abuse in foster homes",
+    source: "Multiple state child welfare audits",
+    color: "text-red-400"
+  },
+  {
+    icon: Home,
+    number: "30–50%",
+    label: "Annual foster home turnover",
+    detail: "Homes that quit, are closed, or have licenses revoked each year",
+    source: "Casey Family Programs & state reports",
+    color: "text-orange-400"
+  }
+];
+
+const stateExamples = [
+  { state: "Texas", rate: "1.4%", reported: "Low", note: "Highest volume of removals" },
+  { state: "California", rate: "0.7%", reported: "Medium", note: "Large system challenges" },
+  { state: "Florida", rate: "1.1%", reported: "Low", note: "High infant removals" },
+  { state: "New York", rate: "0.6%", reported: "High", note: "Better reporting compliance" },
+];
+
+export default function RisksPage() {
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/95 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+              <div className="text-[10px] text-white/60 -mt-1">.net</div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <a href="/" className="hover:text-red-400 transition-colors">Home</a>
+            <a href="/crisis" className="hover:text-red-400 transition-colors">The Crisis</a>
+            <a href="/pipeline" className="hover:text-red-400 transition-colors">Newborn Pipeline</a>
+            <a href="/blackbox" className="hover:text-red-400 transition-colors">The Black Box</a>
+            <a href="/risks" className="text-red-400 font-semibold">Risks in Care</a>
+            <a href="/action" className="hover:text-red-400 transition-colors">Take Action</a>
+          </div>
+
+          <a 
+            href="/action"
+            className="bg-red-600 hover:bg-red-500 px-8 py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95"
+          >
+            DEMAND TRANSPARENCY
+          </a>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-20">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="uppercase text-red-400 text-sm font-mono tracking-[4px] mb-6">THE HUMAN COST</div>
+            <h1 className="text-7xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
+              Risks in<br />
+              <span className="text-red-400">Care</span>
+            </h1>
+            <p className="text-2xl text-white/80 max-w-3xl mx-auto">
+              Most foster parents are dedicated people doing incredibly hard work.<br />
+              <span className="text-red-400">The system that oversees them is failing both the parents and the children.</span>
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stat Cards */}
+      <section className="py-20 bg-[#0A1428]">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-8">
+            {riskStats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white/5 border border-white/10 rounded-3xl p-10 hover:border-red-500/40 transition-all group"
+                >
+                  <div className={`text-7xl mb-6 ${stat.color}`}>
+                    <Icon strokeWidth={1.4} />
+                  </div>
+                  <div className="text-6xl font-mono font-bold tabular-nums mb-3">
+                    {stat.number}
+                  </div>
+                  <div className="text-2xl font-semibold leading-tight mb-4">
+                    {stat.label}
+                  </div>
+                  <div className="text-white/60 text-lg mb-8">
+                    {stat.detail}
+                  </div>
+                  <div className="text-xs font-mono text-white/40 uppercase tracking-widest">
+                    {stat.source}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Newborn Vulnerability */}
+      <section className="py-24 bg-gradient-to-b from-transparent via-red-950/20 to-transparent border-y border-white/5">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <div className="text-red-400 text-sm font-mono tracking-widest mb-4">ESPECIALLY VULNERABLE</div>
+          <h2 className="text-5xl font-bold tracking-tighter mb-8">
+            Newborns have almost no voice<br />
+            and almost no protection once placed.
+          </h2>
+          <p className="text-xl text-white/70 max-w-2xl mx-auto">
+            Infants removed at birth are often placed in emergency or stranger foster homes with accelerated approvals. 
+            When something goes wrong, the child cannot speak.
+          </p>
+        </div>
+      </section>
+
+      {/* State Comparison Table */}
+      <section className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="mb-12 text-center">
+            <h3 className="text-4xl font-bold tracking-tighter mb-3">State-by-State Snapshot</h3>
+            <p className="text-white/60">Maltreatment rates while children are in state care</p>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left py-6 px-10 text-white/60 font-normal text-sm uppercase tracking-wider">State</th>
+                  <th className="text-left py-6 px-10 text-white/60 font-normal text-sm uppercase tracking-wider">Maltreatment Rate in Care</th>
+                  <th className="text-left py-6 px-10 text-white/60 font-normal text-sm uppercase tracking-wider">NCMEC Reporting</th>
+                  <th className="text-left py-6 px-10 text-white/60 font-normal text-sm uppercase tracking-wider">Notes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {stateExamples.map((row) => (
+                  <tr key={row.state} className="hover:bg-white/5 transition-colors">
+                    <td className="py-7 px-10 font-semibold">{row.state}</td>
+                    <td className="py-7 px-10 text-xl font-mono text-red-400">{row.rate}</td>
+                    <td className="py-7 px-10">
+                      <span className={`inline-block px-4 py-1 rounded-full text-xs font-medium ${
+                        row.reported === 'High' ? 'bg-green-500/20 text-green-400' :
+                        row.reported === 'Medium' ? 'bg-amber-500/20 text-amber-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {row.reported}
+                      </span>
+                    </td>
+                    <td className="py-7 px-10 text-white/70 text-sm">{row.note}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="text-center text-xs text-white/40 mt-8 font-mono">
+            Data drawn from NCANDS, AFCARS, and state-specific child welfare reports • 2024–2025
+          </p>
+        </div>
+      </section>
+
+      {/* Balanced Closing */}
+      <section className="py-28 bg-[#0A1428]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <p className="text-3xl leading-relaxed text-white/90">
+            The vast majority of foster parents are good people doing a job most of us could never do.<br /><br />
+            The problem is the system that places vulnerable newborns into their care — 
+            <span className="text-red-400">with inadequate screening, training, and public accountability</span>.
+          </p>
+
+          <div className="mt-16">
+            <a
+              href="/action"
+              className="inline-block bg-red-600 hover:bg-red-500 text-2xl font-bold px-20 py-8 rounded-3xl transition-all active:scale-95"
+            >
+              FIX THE SYSTEM →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Navigation Hint */}
+      <div className="py-16 text-center text-white/40 text-sm">
+        Next: <a href="/action" className="underline hover:text-red-400">Take Action → Demand Public Tracking</a>
+      </div>
+    </div>
+  );
+}
+
+
+===== app/sources/page.tsx =====
+// app/sources/page.tsx
+'use client';
+
+import { motion } from 'framer-motion';
+import { Search, Download, ExternalLink, ShieldCheck } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+
+const dataSources = [
+  {
+    source: "AFCARS (Adoption and Foster Care Analysis and Reporting System)",
+    description: "Official federal data on children in foster care, entries, exits, demographics, and outcomes.",
+    link: "https://www.acf.hhs.gov/cb/data-research/afcars",
+    lastUpdated: "May 2025 (FY2024 data)",
+    type: "Dashboard + Reports"
+  },
+  {
+    source: "HHS Office of Inspector General (OIG) Audit",
+    description: "74,353 missing episodes from foster care (2018–2020) — 69% never properly reported.",
+    link: "https://oig.hhs.gov/reports/2023/missing-children-from-foster-care/",
+    lastUpdated: "July 2023 (still the definitive national audit)",
+    type: "Official Audit"
+  },
+  {
+    source: "National Center for Missing & Exploited Children (NCMEC)",
+    description: "23,160+ reports of children missing from foster care in 2024. Trafficking risk estimates.",
+    link: "https://www.missingkids.org/ourwork/impact",
+    lastUpdated: "2025 Impact Report",
+    type: "Annual Report"
+  },
+  {
+    source: "NCANDS / Child Maltreatment Reports",
+    description: "Substantiated maltreatment rates while children are in foster care (0.9% national average).",
+    link: "https://www.acf.hhs.gov/cb/data-research/child-maltreatment",
+    lastUpdated: "2024 Report",
+    type: "Annual Report"
+  },
+  {
+    source: "CDC National Vital Statistics System",
+    description: "U.S. births (~3.6 million per year) and newborn statistics.",
+    link: "https://www.cdc.gov/nchs/nvss/index.htm",
+    lastUpdated: "2025 Provisional Data",
+    type: "Vital Statistics"
+  },
+  {
+    source: "ACF Child Welfare Performance Dashboard",
+    description: "New 2026 live state-by-state performance metrics (launched January 2026).",
+    link: "https://www.acf.hhs.gov/cb/performance",
+    lastUpdated: "February 2026",
+    type: "Live Dashboard"
+  },
+  {
+    source: "Casey Family Programs & State Audits",
+    description: "Foster home turnover rates (30–50% annually) and placement studies.",
+    link: "https://www.casey.org/research/",
+    lastUpdated: "2024–2025",
+    type: "Research Reports"
+  }
+];
+
+export default function SourcesPage() {
+  return (
+    <div className="min-h-screen bg-[#0A1428] text-white">
+      <Navbar />
+
+      {/* Hero */}
+      <section className="pt-32 pb-20">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="inline-flex items-center gap-3 bg-emerald-500/10 text-emerald-400 px-6 py-3 rounded-3xl text-sm font-mono tracking-widest mb-8">
+              <ShieldCheck className="w-5 h-5" />
+              100% TRANSPARENT • 100% PUBLIC DATA
+            </div>
+
+            <h1 className="text-7xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
+              Sources &<br />
+              <span className="text-emerald-400">Methodology</span>
+            </h1>
+
+            <p className="text-2xl text-white/80 max-w-3xl mx-auto">
+              Every number on this site comes from official U.S. government sources.<br />
+              No speculation. No anonymous claims. Just receipts.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Sources Table */}
+      <section className="py-20 bg-white/5 border-y border-white/10">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="mb-10 flex items-center justify-between">
+            <h2 className="text-4xl font-bold tracking-tighter">All Primary Sources</h2>
+            <div className="text-emerald-400 text-sm font-mono flex items-center gap-2">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              LIVE VERIFIABLE
+            </div>
+          </div>
+
+          <div className="bg-[#0A1428] border border-white/10 rounded-3xl overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10 bg-white/5">
+                  <th className="text-left py-8 px-10 font-normal text-white/60 uppercase text-xs tracking-widest">Source</th>
+                  <th className="text-left py-8 px-10 font-normal text-white/60 uppercase text-xs tracking-widest">Description</th>
+                  <th className="text-left py-8 px-10 font-normal text-white/60 uppercase text-xs tracking-widest">Last Updated</th>
+                  <th className="w-32"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {dataSources.map((item) => (
+                  <tr key={item.source} className="group hover:bg-white/5 transition-colors">
+                    <td className="py-8 px-10 font-semibold leading-snug pr-12">
+                      {item.source}
+                    </td>
+                    <td className="py-8 px-10 text-white/70 text-[15px] leading-relaxed">
+                      {item.description}
+                      <div className="text-[11px] text-white/40 font-mono mt-2.5 uppercase tracking-wider">
+                        {item.type}
+                      </div>
+                    </td>
+                    <td className="py-8 px-10 text-sm text-white/60 whitespace-nowrap">
+                      {item.lastUpdated}
+                    </td>
+                    <td className="py-8 px-10">
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all group-hover:scale-110"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Download Evidence */}
+          <div className="mt-16 flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-red-950/50 to-transparent border border-red-500/20 rounded-3xl p-10">
+            <div>
+              <div className="text-emerald-400 font-mono text-sm tracking-widest mb-3">EVIDENCE PACKAGE</div>
+              <h3 className="text-3xl font-bold">Download the Full Evidence ZIP</h3>
+              <p className="text-white/70 mt-3">All original PDFs, raw data tables, and our cleaned JSONs</p>
+            </div>
+
+            <a
+              href="https://drive.google.com/file/d/YOUR_ZIP_LINK/view" // ← Replace with actual link
+              target="_blank"
+              className="mt-8 md:mt-0 flex items-center gap-4 bg-white text-black font-bold px-10 py-5 rounded-2xl hover:bg-white/90 transition-all group"
+            >
+              <Download className="w-6 h-6 group-hover:-translate-y-0.5 transition-transform" />
+              DOWNLOAD ALL EVIDENCE (48 MB)
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Statement */}
+      <section className="py-28 text-center">
+        <div className="max-w-3xl mx-auto px-6">
+          <p className="text-3xl leading-relaxed text-white/90">
+            This website was built to make the truth unavoidable.<br />
+            Every statistic is directly traceable to the federal government’s own publications.
+          </p>
+
+          <div className="mt-16 text-white/40 text-sm font-mono">
+            Last updated: February 15, 2026
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="border-t border-white/10 py-32">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <h2 className="text-5xl font-bold mb-8">The data is here.<br />The action is now.</h2>
+          
+          <a
+            href="/action"
+            className="inline-block bg-red-600 hover:bg-red-500 text-2xl font-bold px-20 py-8 rounded-3xl transition-all active:scale-95 shadow-2xl shadow-red-600/50"
+          >
+            SIGN THE PETITION → DEMAND TRANSPARENCY
+          </a>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+
+===== components/Navbar.tsx =====
+// components/Navbar.tsx
+'use client';
+
+import { Search, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+
+export default function Navbar() {
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A1428]/95 backdrop-blur-lg border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
+            <Search className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-2xl font-bold tracking-tighter">wherearethechildren</div>
+            <div className="text-[10px] text-white/60 -mt-1">.net</div>
+          </div>
+        </div>
+
+        <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+          <Link href="/" className="hover:text-red-400 transition-colors">Home</Link>
+          <Link href="/crisis" className="hover:text-red-400 transition-colors">The Crisis</Link>
+          <Link href="/pipeline" className="hover:text-red-400 transition-colors">Newborn Pipeline</Link>
+          <Link href="/blackbox" className="hover:text-red-400 transition-colors">The Black Box</Link>
+          <Link href="/risks" className="hover:text-red-400 transition-colors">Risks in Care</Link>
+          <Link href="/action" className="hover:text-red-400 transition-colors">Take Action</Link>
+	  <Link href="/sources" className="hover:text-red-400 transition-colors">Sources</Link>
+        </div>
+
+        <Link 
+          href="/action"
+          className="bg-red-600 hover:bg-red-500 px-8 py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95 flex items-center gap-2"
+        >
+          DEMAND TRANSPARENCY
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </nav>
+  );
+}
+
+
+===== package.json =====
+{
+  "name": "wherearethechildren",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "framer-motion": "^12.34.0",
+    "lucide-react": "^0.564.0",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "15.1.6",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.7.0"
+  }
+}
+
+
+===== postcss.config.mjs =====
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {}
+  }
+};
+
+
+===== public/project_images/og-image.jpg =====
+Error reading file: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+===== tsconfig.json =====
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+
+
+===== wherearethechildren/app/globals.css =====
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+===== wherearethechildren/app/layout.tsx =====
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
+
+
+===== wherearethechildren/app/page.tsx =====
+import Image from "next/image";
+
+export default function Home() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={100}
+          height={20}
+          priority
+        />
+        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+            To get started, edit the page.tsx file.
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            Looking for a starting point or more instructions? Head over to{" "}
+            <a
+              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Templates
+            </a>{" "}
+            or the{" "}
+            <a
+              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Learning
+            </a>{" "}
+            center.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+          <a
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={16}
+              height={16}
+            />
+            Deploy Now
+          </a>
+          <a
+            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Documentation
+          </a>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+
+===== wherearethechildren/eslint.config.mjs =====
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+
+
+===== wherearethechildren/next-env.d.ts =====
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+import "./.next/types/routes.d.ts";
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+
+===== wherearethechildren/next.config.ts =====
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+
+
+===== wherearethechildren/postcss.config.mjs =====
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+
+
+===== wherearethechildren/tsconfig.json =====
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+
+

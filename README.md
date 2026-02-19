@@ -7,6 +7,25 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
 ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 
+
+<div align="center">
+
+  <img src="./public/og-image.jpg" alt="Where Are The Children?" width="100%" />
+
+  <h1>Where Are The Children?</h1>
+
+  <p><strong>Official U.S. government data on the newborns CPS removes — and the ones the system loses track of.</strong></p>
+
+  <p>
+    <a href="https://wherearethechildren.net">
+      <img src="https://img.shields.io/badge/Live_Site-wherearethechildren.net-red?style=for-the-badge&logo=vercel" alt="Live Site" />
+    </a>
+  </p>
+
+</div>
+
+<br />
+
 ---
 
 ## Table of Contents

@@ -1,0 +1,10 @@
+A powerful, dark, emotional social media OG image for 1200x630, professional advocacy style.
+Dark navy blue background (#0A1428) with very subtle dark red gradient.
+Center: a stark, high-contrast silhouette of an empty white baby crib with the bars forming a jail/prison feel.
+A large glowing red padlock floating in front of the crib, slightly cracked open.
+Huge bold white text across the top: "WHERE ARE"
+Even larger blood-red text below: "THE CHILDREN?"
+Smaller elegant white subtitle underneath: "The system removes 22,000 newborns every year. Then it loses track of them."
+Bottom red banner with white text: "74,353 missing episodes • 69% never reported"
+Small website URL in clean white at the very bottom: wherearethechildren.net
+Cinematic lighting, high contrast, emotional, serious, professional, minimalist, advocacy poster style, sharp details --ar 1200:630 --stylize 250 --v 6
