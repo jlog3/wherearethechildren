@@ -12,18 +12,18 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Where Are The Children? | Official Data on Missing Foster Kids',
   description: 'The government removes thousands of newborns every year. Then it loses track of many of them. Here is the official data they publish — and what they deliberately hide.',
-  keywords: 'foster care, missing children, CPS, child protective services, OIG audit, newborn removal, foster accountability',
+  keywords: 'foster care, missing children, CPS, child protective services, OIG audit, newborn removal, foster accountability, petition',
   openGraph: {
     title: 'Where Are The Children?',
-    description: 'Official U.S. government data on the foster care black box',
+    description: '69% of missing-from-care episodes go unreported. Sign the petition for the Newborn & Foster Child Accountability Act.',
     url: 'https://wherearethechildren.net',
     siteName: 'Where Are The Children?',
     images: [
       {
-        url: 'https://wherearethechildren.net/og-image.jpg', // We'll create this later
+        url: 'https://wherearethechildren.net/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Where Are The Children?',
+        alt: 'Where Are The Children? — Demand Public Tracking',
       },
     ],
     locale: 'en_US',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Where Are The Children?',
-    description: 'The foster system is losing children. Here is the proof.',
+    description: '69% of missing foster care episodes go unreported. The black box must be opened.',
   },
   robots: 'index, follow',
 };

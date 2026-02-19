@@ -1,0 +1,2 @@
+To seed your starting count (if you already have signatures), run this once in the Upstash console:
+SET petition:signatures 47

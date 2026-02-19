@@ -1,0 +1,57 @@
+npm run dev issue
+just run 
+rm -rf .next
+
+
+
+
+
+npm run dev
+
+> wherearethechildren@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.1.44:3001
+- Environments: .env.local
+
+✓ Starting...
+⨯ Unable to acquire lock at /home/john/Desktop/projects/wherearethechildren/.next/dev/lock, is another instance of next dev running?
+  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
+
+
+
+
+
+(base) john@john-Nitro-AN515-54:~/Desktop/projects/wherearethechildren$ npm install
+npm run dev
+
+added 2 packages, and audited 335 packages in 49s
+
+139 packages are looking for funding
+  run `npm fund` for details
+
+14 vulnerabilities (1 moderate, 13 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> wherearethechildren@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.1.44:3001
+- Environments: .env.local
+
+✓ Starting...
+⨯ Unable to acquire lock at /home/john/Desktop/projects/wherearethechildren/.next/dev/lock, is another instance of next dev running?
+  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
