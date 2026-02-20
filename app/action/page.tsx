@@ -2,9 +2,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Send, Share2, Mail, Twitter, Facebook, ExternalLink } from 'lucide-react';
+import { Send, Mail, ExternalLink } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import PetitionForm from '@/components/PetitionForm';
+import ShareButtons from '@/components/ShareButtons';
 
 const petitionTextForEmail = `Dear Members of Congress,
 
@@ -108,38 +109,14 @@ export default function ActionPage() {
         </div>
       </section>
 
-      {/* Share */}
+      {/* Share — now with stat picker */}
       <section className="py-16 bg-white/[0.02] border-t border-white/5">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-2xl font-bold mb-8">Share This Site</h3>
-
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="https://twitter.com/intent/tweet?text=Where%20are%20the%20children%3F%2069%25%20of%20missing%20foster%20care%20episodes%20go%20unreported.%20Sign%20the%20petition%3A%20https%3A%2F%2Fwherearethechildren.net"
-              target="_blank"
-              className="flex items-center gap-3 bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 border border-[#1DA1F2]/30 px-8 py-4 rounded-2xl transition-all"
-            >
-              <Twitter className="w-5 h-5" />
-              Share on X
-            </a>
-
-            <a
-              href="https://www.facebook.com/sharer/sharer.php?u=https://wherearethechildren.net"
-              target="_blank"
-              className="flex items-center gap-3 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 px-8 py-4 rounded-2xl transition-all"
-            >
-              <Facebook className="w-5 h-5" />
-              Share on Facebook
-            </a>
-
-            <button
-              onClick={() => navigator.clipboard.writeText('https://wherearethechildren.net')}
-              className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/20 px-8 py-4 rounded-2xl transition-all"
-            >
-              <Share2 className="w-5 h-5" />
-              Copy Link
-            </button>
-          </div>
+          <h3 className="text-2xl font-bold mb-2">Share This Site</h3>
+          <p className="text-white/50 text-sm mb-6">
+            Choose a statistic to customize your social media post with its own preview image.
+          </p>
+          <ShareButtons />
         </div>
       </section>
 

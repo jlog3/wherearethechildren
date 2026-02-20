@@ -25,6 +25,7 @@ file_list = [
     'components/Navbar.tsx',
     'components/OIGFunnel.tsx',
     'components/PetitionForm.tsx',
+    'components/ShareButtons.tsx',
     # 'components/OIGFunnel.tsx',
     # 'next-env.d.ts',
     # 'package-lock.json',
@@ -37,24 +38,7 @@ file_list = [
     'public/project_images/og-image.jpg',
     # 'public/project_images/og-image_prompt.txt',
     'tsconfig.json',
-    # 'wherearethechildren/.gitignore',
-    # 'wherearethechildren/README.md',
-    # 'wherearethechildren/app/favicon.ico',
-    'wherearethechildren/app/globals.css',
-    'wherearethechildren/app/layout.tsx',
-    'wherearethechildren/app/page.tsx',
-    'wherearethechildren/eslint.config.mjs',
-    'wherearethechildren/next-env.d.ts',
-    'wherearethechildren/next.config.ts',
-    # 'wherearethechildren/package-lock.json',
-    # 'wherearethechildren/package.json',
-    'wherearethechildren/postcss.config.mjs',
-    # 'wherearethechildren/public/file.svg',
-    # 'wherearethechildren/public/globe.svg',
-    # 'wherearethechildren/public/next.svg',
-    # 'wherearethechildren/public/vercel.svg',
-    # 'wherearethechildren/public/window.svg',
-    'wherearethechildren/tsconfig.json',
+    
 ]
 
 

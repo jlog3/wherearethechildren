@@ -577,6 +577,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Where Are The Children?',
     description: '69% of missing foster care episodes go unreported. The black box must be opened.',
+    images: ['https://wherearethechildren.net/og-image.jpg']
   },
   robots: 'index, follow',
 };
@@ -2067,6 +2068,7 @@ export default function OIGFunnel() {
 import { useState, useEffect } from 'react';
 import { Send, ChevronDown, ChevronUp, Target, ExternalLink, Copy, Check, User, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ShareButtons from '@/components/ShareButtons';
 
 const SIGNATURE_GOAL_1 = 10000;
 const SIGNATURE_GOAL_2 = 50000;
@@ -2330,22 +2332,8 @@ export default function PetitionForm({ compact = false }: PetitionFormProps) {
             </div>
           </div>
 
-          {/* Share */}
-          <div className="mt-6 flex flex-wrap gap-3 justify-center">
-            <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("I just signed the petition demanding public tracking of children in foster care. 69% of missing episodes go unreported. The black box must be opened. https://wherearethechildren.net")}`}
-              target="_blank"
-              className="bg-[#1DA1F2]/20 hover:bg-[#1DA1F2]/30 border border-[#1DA1F2]/30 px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
-            >
-              Share on X →
-            </a>
-            <button
-              onClick={() => navigator.clipboard.writeText('https://wherearethechildren.net')}
-              className="bg-white/10 hover:bg-white/20 border border-white/20 px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
-            >
-              Copy link to share
-            </button>
-          </div>
+          {/* Share — always visible below success state */}
+          <ShareButtons compact={compact} />
         </motion.div>
       </div>
     );
@@ -2490,6 +2478,9 @@ export default function PetitionForm({ compact = false }: PetitionFormProps) {
           </p>
         </div>
       </form>
+
+      {/* Share — always visible below the petition form */}
+      <ShareButtons compact={compact} />
     </div>
   );
 }
@@ -2516,6 +2507,209 @@ function SignatureProgress({ count, goal }: { count: number; goal: number }) {
           transition={{ duration: 1.5, ease: 'easeOut' }}
           className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full"
         />
+      </div>
+    </div>
+  );
+}
+
+
+===== components/ShareButtons.tsx =====
+// components/ShareButtons.tsx
+'use client';
+
+import { useState } from 'react';
+import { Share2, Twitter, Facebook, Linkedin, Mail, Link2, Check } from 'lucide-react';
+
+const SITE_URL = 'https://wherearethechildren.net';
+const SHARE_TEXT =
+  'Where are the children? 69% of missing foster care episodes go unreported. The government\u2019s own auditors confirmed it. Sign the petition demanding public tracking:';
+const SHARE_TITLE = 'Where Are The Children?';
+const SHARE_DESCRIPTION =
+  '69% of missing-from-care episodes go unreported. Sign the petition for the Newborn & Foster Child Accountability Act.';
+const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+
+interface ShareButtonsProps {
+  compact?: boolean;
+}
+
+export default function ShareButtons({ compact = false }: ShareButtonsProps) {
+  const [copied, setCopied] = useState(false);
+
+  const encodedUrl = encodeURIComponent(SITE_URL);
+  const encodedText = encodeURIComponent(SHARE_TEXT);
+  const encodedTitle = encodeURIComponent(SHARE_TITLE);
+  const encodedDescription = encodeURIComponent(SHARE_DESCRIPTION);
+
+  const shareLinks = {
+    twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    email: `mailto:?subject=${encodedTitle}&body=${encodedText}%20${encodedUrl}`,
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(SITE_URL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = SITE_URL;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  const handleNativeShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: SHARE_TITLE,
+          text: SHARE_DESCRIPTION,
+          url: SITE_URL,
+        });
+      } catch {
+        // User cancelled or share failed — no action needed
+      }
+    }
+  };
+
+  const hasNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+
+  if (compact) {
+    return (
+      <div className="flex flex-wrap items-center gap-2 justify-center">
+        <span className="text-[11px] text-white/40 font-mono uppercase tracking-widest mr-1">
+          Share
+        </span>
+        <a
+          href={shareLinks.twitter}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-[#1DA1F2]/20 border border-white/10 hover:border-[#1DA1F2]/30 flex items-center justify-center transition-all"
+          aria-label="Share on X (Twitter)"
+        >
+          <Twitter className="w-4 h-4 text-white/60" />
+        </a>
+        <a
+          href={shareLinks.facebook}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-[#1877F2]/20 border border-white/10 hover:border-[#1877F2]/30 flex items-center justify-center transition-all"
+          aria-label="Share on Facebook"
+        >
+          <Facebook className="w-4 h-4 text-white/60" />
+        </a>
+        <a
+          href={shareLinks.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-[#0A66C2]/20 border border-white/10 hover:border-[#0A66C2]/30 flex items-center justify-center transition-all"
+          aria-label="Share on LinkedIn"
+        >
+          <Linkedin className="w-4 h-4 text-white/60" />
+        </a>
+        <a
+          href={shareLinks.email}
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 flex items-center justify-center transition-all"
+          aria-label="Share via email"
+        >
+          <Mail className="w-4 h-4 text-white/60" />
+        </a>
+        <button
+          onClick={handleCopyLink}
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 flex items-center justify-center transition-all"
+          aria-label="Copy link"
+        >
+          {copied ? (
+            <Check className="w-4 h-4 text-emerald-400" />
+          ) : (
+            <Link2 className="w-4 h-4 text-white/60" />
+          )}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 pt-5 border-t border-white/10">
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <Share2 className="w-4 h-4 text-white/40" />
+        <span className="text-xs font-mono text-white/40 uppercase tracking-[3px]">
+          Spread the word
+        </span>
+      </div>
+
+      <div className="flex flex-wrap gap-2.5 justify-center">
+        <a
+          href={shareLinks.twitter}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 border border-[#1DA1F2]/20 hover:border-[#1DA1F2]/40 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+        >
+          <Twitter className="w-4 h-4" />
+          <span className="text-white/80">X</span>
+        </a>
+
+        <a
+          href={shareLinks.facebook}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/20 hover:border-[#1877F2]/40 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+        >
+          <Facebook className="w-4 h-4" />
+          <span className="text-white/80">Facebook</span>
+        </a>
+
+        <a
+          href={shareLinks.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 bg-[#0A66C2]/10 hover:bg-[#0A66C2]/20 border border-[#0A66C2]/20 hover:border-[#0A66C2]/40 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+        >
+          <Linkedin className="w-4 h-4" />
+          <span className="text-white/80">LinkedIn</span>
+        </a>
+
+        <a
+          href={shareLinks.email}
+          className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+        >
+          <Mail className="w-4 h-4" />
+          <span className="text-white/80">Email</span>
+        </a>
+
+        <button
+          onClick={handleCopyLink}
+          className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4 text-emerald-400" />
+              <span className="text-emerald-400">Copied!</span>
+            </>
+          ) : (
+            <>
+              <Link2 className="w-4 h-4" />
+              <span className="text-white/80">Copy Link</span>
+            </>
+          )}
+        </button>
+
+        {hasNativeShare && (
+          <button
+            onClick={handleNativeShare}
+            className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="text-white/80">More…</span>
+          </button>
+        )}
       </div>
     </div>
   );
@@ -2564,7 +2758,7 @@ export default {
 
 
 ===== public/project_images/og-image.jpg =====
-Error reading file: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+File not found.
 
 ===== tsconfig.json =====
 {
@@ -2604,28 +2798,4 @@ Error reading file: 'utf-8' codec can't decode byte 0xff in position 0: invalid 
   ]
 }
 
-
-===== wherearethechildren/app/globals.css =====
-File not found.
-
-===== wherearethechildren/app/layout.tsx =====
-File not found.
-
-===== wherearethechildren/app/page.tsx =====
-File not found.
-
-===== wherearethechildren/eslint.config.mjs =====
-File not found.
-
-===== wherearethechildren/next-env.d.ts =====
-File not found.
-
-===== wherearethechildren/next.config.ts =====
-File not found.
-
-===== wherearethechildren/postcss.config.mjs =====
-File not found.
-
-===== wherearethechildren/tsconfig.json =====
-File not found.
 
