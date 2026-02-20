@@ -1,7 +1,7 @@
 // components/Navbar.tsx
 'use client';
-
-import { Search, ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -24,8 +24,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-          <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center">
-            <Search className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
+            <Image
+              src="/icon-32x32.png"
+              alt="wherearethechildren logo"
+              width={36}
+              height={36}
+              className="object-contain"
+            />
           </div>
           <div>
             <div className="text-xl font-bold tracking-tighter text-white">wherearethechildren</div>
@@ -59,8 +65,6 @@ export default function Navbar() {
             SIGN PETITION
             <ArrowRight className="w-4 h-4" />
           </Link>
-
-          {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="xl:hidden w-10 h-10 flex items-center justify-center text-white/70 hover:text-white transition-colors"

@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Send, ChevronDown, ChevronUp, Target, ExternalLink, Copy, Check, User, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ShareButtons from '@/components/ShareButtons';
 
 const SIGNATURE_GOAL_1 = 10000;
 const SIGNATURE_GOAL_2 = 50000;
@@ -267,22 +268,8 @@ export default function PetitionForm({ compact = false }: PetitionFormProps) {
             </div>
           </div>
 
-          {/* Share */}
-          <div className="mt-6 flex flex-wrap gap-3 justify-center">
-            <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("I just signed the petition demanding public tracking of children in foster care. 69% of missing episodes go unreported. The black box must be opened. https://wherearethechildren.net")}`}
-              target="_blank"
-              className="bg-[#1DA1F2]/20 hover:bg-[#1DA1F2]/30 border border-[#1DA1F2]/30 px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
-            >
-              Share on X →
-            </a>
-            <button
-              onClick={() => navigator.clipboard.writeText('https://wherearethechildren.net')}
-              className="bg-white/10 hover:bg-white/20 border border-white/20 px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
-            >
-              Copy link to share
-            </button>
-          </div>
+          {/* Share — always visible below success state */}
+          <ShareButtons compact={compact} />
         </motion.div>
       </div>
     );
@@ -427,6 +414,9 @@ export default function PetitionForm({ compact = false }: PetitionFormProps) {
           </p>
         </div>
       </form>
+
+      {/* Share — always visible below the petition form */}
+      <ShareButtons compact={compact} />
     </div>
   );
 }

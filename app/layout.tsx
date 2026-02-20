@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Where Are The Children?',
     description: '69% of missing foster care episodes go unreported. The black box must be opened.',
+    images: ['https://wherearethechildren.net/og-image.jpg']
   },
   robots: 'index, follow',
 };
